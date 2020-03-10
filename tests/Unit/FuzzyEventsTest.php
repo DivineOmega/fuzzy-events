@@ -1,5 +1,6 @@
 <?php
 
+use DivineOmega\FuzzyEvents\Exceptions\ConfidenceTooLowException;
 use DivineOmega\FuzzyEvents\FuzzyDispatcher;
 use DivineOmega\FuzzyEvents\TestClasses\Greeting;
 use PHPUnit\Framework\TestCase;
@@ -30,6 +31,13 @@ class FuzzyEventsTest extends TestCase
         $response = $this->getDispatcher()->fire('Greetingz!');
 
         $this->assertEquals('Hello there!', $response);
+    }
+
+    public function testLowConfidenceEventFiring()
+    {
+        $this->expectException(ConfidenceTooLowException::class);
+
+        $response = $this->getDispatcher()->fire('Goodbye!');
     }
 
     public function testGetListener()

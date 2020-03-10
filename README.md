@@ -49,6 +49,12 @@ $response = $dispatcher->fire('Greetingz!');
 
 // $response = 'Hello there!'
 
+try {
+    $dispatcher->fire('Goodbye!');
+} catch (ConfidenceTooLowException $e) {
+    // No matches within specified confidence threshold!
+}
+
 $confidences = $dispatcher->getConfidences('Hi!');
 
 // $confidences = [
