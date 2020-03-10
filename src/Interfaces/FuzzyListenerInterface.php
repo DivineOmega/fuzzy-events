@@ -2,7 +2,7 @@
 
 namespace DivineOmega\FuzzyEvents\Interfaces;
 
-interface FuzzyListener
+interface FuzzyListenerInterface
 {
     public function handle(string $query);
 }

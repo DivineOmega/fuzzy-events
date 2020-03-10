@@ -3,7 +3,8 @@
 namespace DivineOmega\FuzzyEvents;
 
 use DivineOmega\FuzzyEvents\Exceptions\ConfidenceTooLowException;
-use DivineOmega\FuzzyEvents\Interfaces\FuzzyListener;
+use DivineOmega\FuzzyEvents\Interfaces\FuzzyListenerInterface;
+use InvalidArgumentException;
 
 class FuzzyDispatcher
 {
@@ -19,6 +20,10 @@ class FuzzyDispatcher
 
     public function __construct(array $listeners, float $confidenceThreshold)
     {
+        if (!$listeners) {
+            throw new InvalidArgumentException('No listeners defined.');
+        }
+
         $this->listeners = $listeners;
         $this->confidenceThreshold = $confidenceThreshold;
     }
@@ -30,7 +35,7 @@ class FuzzyDispatcher
         return $listener->handle($query);
     }
 
-    public function getListener(string $query): ?FuzzyListener
+    public function getListener(string $query): ?FuzzyListenerInterface
     {
         $className = $this->getListenerClassName($query);
 
@@ -41,11 +46,12 @@ class FuzzyDispatcher
     {
         $confidences = $this->getConfidences($query);
 
-        rsort($confidences);
+        arsort($confidences);
 
         $listenerClassNames = array_keys($confidences);
 
-        $highestConfidence = $confidences[0];
+        $listenerClassName = $listenerClassNames[0];
+        $highestConfidence = $confidences[$listenerClassName];
 
         if ($highestConfidence < $this->confidenceThreshold) {
             throw new ConfidenceTooLowException($this->confidenceThreshold, $highestConfidence);
@@ -56,6 +62,21 @@ class FuzzyDispatcher
 
     public function getConfidences(string $query): array
     {
+        $confidences = [];
 
+        foreach($this->listeners as $listenerClassName => $phrases) {
+            $confidence = 0;
+
+            foreach($phrases as $phrase) {
+                similar_text($query, $phrase, $phraseConfidence);
+                if ($phraseConfidence > $confidence) {
+                    $confidence = $phraseConfidence;
+                }
+            }
+
+            $confidences[$listenerClassName] = $confidence;
+        }
+
+        return $confidences;
     }
 }
