@@ -1,5 +1,7 @@
 # Fuzzy Events
 
+[![Build Status](https://travis-ci.com/DivineOmega/fuzzy-events.svg?branch=master)](https://travis-ci.com/DivineOmega/fuzzy-events)
+
 Fuzzy events is a PHP package that allows you to perform actions based on a 
 fuzzy string matches.
 
