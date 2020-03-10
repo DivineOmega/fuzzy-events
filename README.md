@@ -13,7 +13,7 @@ Install using the following Composer command.
 composer require divineomega/fuzzy-events
 ```
 
-### Usage Example
+### Usage
 
 See the following usage example.
 
