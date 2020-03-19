@@ -23,7 +23,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "DivineOmega\\FuzzyEvents\\TestClasses\\": "tests/Unit/includes/TestClasses/"
+            "DivineOmega\\FuzzyEvents\\TestClasses\\": "tests/Unit/includes/TestClasses/",
+            "DivineOmega\\FuzzyEvents\\Unit\\": "tests/Unit/"
         }
     }
 }
