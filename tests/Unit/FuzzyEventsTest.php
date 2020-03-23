@@ -1,9 +1,12 @@
 <?php
 
+namespace DivineOmega\FuzzyEvents\Unit;
+
 use DivineOmega\FuzzyEvents\Exceptions\ConfidenceTooLowException;
 use DivineOmega\FuzzyEvents\FuzzyDispatcher;
 use DivineOmega\FuzzyEvents\TestClasses\Greeting;
 use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 
 class FuzzyEventsTest extends TestCase
 {
@@ -37,14 +40,21 @@ class FuzzyEventsTest extends TestCase
     {
         $this->expectException(ConfidenceTooLowException::class);
 
-        $response = $this->getDispatcher()->fire('Goodbye!');
+        $this->getDispatcher()->fire('Goodbye!');
+    }
+
+    public function testEmptyListener()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new FuzzyDispatcher([], 75);
     }
 
     public function testGetListener()
     {
         $listener = $this->getDispatcher()->getListener('Why hello there');
 
-        $this->assertEquals(Greeting::class, get_class($listener));
+        $this->assertInstanceOf(Greeting::class, $listener);
     }
 
     public function testGetListenerClassName()
@@ -56,7 +66,7 @@ class FuzzyEventsTest extends TestCase
 
     public function testGetConfidences()
     {
-        $confidences = $className = $this->getDispatcher()->getConfidences('Hi!');
+        $confidences = $this->getDispatcher()->getConfidences('Hi!');
 
         $this->assertEquals([
             Greeting::class => 80
